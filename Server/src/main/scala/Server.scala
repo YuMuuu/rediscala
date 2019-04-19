@@ -1,14 +1,21 @@
 import java.io.PrintStream
 import java.net.{ServerSocket, Socket}
 
+import com.typesafe.config.ConfigFactory
+
 import scala.io.BufferedSource
 
 object Server {
+  val config = ConfigFactory.load()
+
   val CRLF = "\r\n"
 
   def main(args: Array[String]): Unit = {
     //サーバーソケットを生成しポート番号をバインドする
-    val serverSocket = new ServerSocket(4545)
+    val port = config.getInt("port")
+
+    val serverSocket = new ServerSocket(port)
+
 
 
     while (true) {
@@ -31,7 +38,7 @@ object Server {
   }
 
 
-  def exec(commands: List[Any]): Any = commands.head.asInstanceOf[String].toUpperCase match {
+  def exec(commands: List[Any]): Any = {
     case "PING" => if (commands.length == 1) "PONG" else commands(1)
     case "SET" => onSet(commands.drop(1))
     case "INCRBY" => store.incrBy(commands(1), commands(2).toString.toLong)

@@ -1,24 +1,28 @@
+import sbt.Keys.libraryDependencies
+
+ThisBuild / organization := "com.kijima"
+ThisBuild / version      := "0.1.0-SNAPSHOT"
+ThisBuild / scalaVersion := "2.12.1"
+
+cancelable in Global := true
+
+val typesafeConfig = "com.typesafe" % "config" % "1.3.4"
+
 lazy val commonSettings = Seq(
-  version := "0.1-SNAPSHOT",
-  organization := "kijima",
-  scalaVersion := "2.12.1",
-  test in assembly := {}
+    libraryDependencies ++= Seq(typesafeConfig)
 )
 
-lazy val app = (project in file(".")).
-  settings(commonSettings: _*).
+lazy val app = (project in file("Server")).
   settings(
-    mainClass in assembly := Some("Server"),
-    assemblyJarName in assembly := "server.jar"
-    // more settings here ...
+    name := "server",
+    commonSettings
   )
 
-/* 
 
-  lazy val client = (project in file(".")).
+lazy val client = (project in file("Client")).
   settings(
-    mainClass in(Compile, run) := Some("Client")
+    name := "client",
+    commonSettings
   )
-  
- */
+
 

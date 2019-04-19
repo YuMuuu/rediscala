@@ -1,3 +1,5 @@
+package src.main.scala
+
 import java.io.PrintStream
 import java.net.{InetAddress, Socket}
 
