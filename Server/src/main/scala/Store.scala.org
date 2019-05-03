@@ -1,0 +1,77 @@
+
+class Store {
+  private var data: Map[String, Long] = Map()
+
+  private def set(key: String, value: Long): String = {
+    println("SET")
+    data = data + (key -> value)
+    println(data.getOrElse(key, None))
+    "OK"
+  }
+
+  private def setNX(key: String, value: Long): Any = {
+    if (data.contains(key)) {
+      0
+    } else {
+      set(key, value)
+    }
+  }
+
+  private def setXX(key: String, value: Long): Any = {
+    if (data.contains(key)) {
+      set(key, value)
+    } else {
+      0
+    }
+  }
+
+  private def get(key: String): Any = {
+    data.getOrElse(key, "-") match {
+      case "-" => List("-", "Data not found")
+      case i: Any => i
+    }
+  }
+
+  private def incrBy(key: String, value: Long):Any = {
+    val preVal = get(key)
+    preVal match {
+      case i: List[String] => i
+      case i: Long => {data = data + (key -> (i + value)); i + value }
+      case i: String => {data = data + (key -> (i.toLong + value)); i.toLong + value }
+      case _ => List("-", "type mismatch")
+    }
+  }
+
+  private def decrBy(key:String, value:Long):Any = {
+    val preVal = get(key)
+    preVal match {
+      case i: List[String] => i
+      case i: Long => {data = data + (key -> (i - value)); i - value }
+      case i: String => {data = data + (key -> (i.toLong - value)); i.toLong - value }
+      case _ => List("-", "type mismatch")
+    }
+  }
+
+  private def delete(keys: List[String]): Int = {
+    val preSize = data.size
+    data = data -- keys
+    preSize - data.size
+  }
+
+  private def exists(keys: List[String]): Int = {
+    data.size - (data -- keys).size
+  }
+}
+
+
+object Store {
+  def apply = new Store
+  def set(key: String, value: Long):String = apply.set(key, value)
+  def setNX(key: String, value: Long) = apply.setNX(key, value)
+  def setXX(key: String, value: Long) = apply.setXX(key, value)
+  def get(key:String) = apply.get(key)
+  def incrBy(key:String, value: Long) = apply.incrBy(key, value)
+  def decrBy(key:String, value:Long) = apply.decrBy(key, value)
+  def delete(keys: List[String]):Int = apply.delete(keys)
+  def exists(keys: List[String]):Int = apply.exists(keys)
+}

@@ -10,14 +10,14 @@ object Server {
 
   def main(args: Array[String]): Unit = {
 
-    implicit val ec:ExecutionContext = ExecutionContext.Implicits.global
+    implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
     val config = ConfigFactory.load()
 
-//    val port = config.getInt("port")
+    //    val port = config.getInt("port")
     val port = 4545
 
-//    val parser = Parser
+    //    val parser = Parser
 
     //サーバーソケットを生成しポート番号をバインドする
     val serverSocket = new ServerSocket(port)
@@ -31,21 +31,26 @@ object Server {
           val in = s.getInputStream
           val out = s.getOutputStream
 
-          /**
-            * パーサーでパースする
-            */
-          //val request = ???
 
           /**
-            * パース結果をRequestHandler型にmapする
-            *
+            * 構文解析
             */
-          //val response = ???
+          val parser = ???
 
           /**
-            * 評価結果をoutputStreamに出力する
+            * 字句解析
             */
-           //response.foreach(_.writeTo(out))
+          val lexer = ???
+
+          /**
+            * 評価
+            */
+          val eval: String = ???
+
+          /**
+            * 表示
+            */
+          out.write(eval.getBytes())
         }
       }
     }
